@@ -1,3 +1,3 @@
-#!/usr/bin/python3
+#!/usr/bin/zsh 
 
 python3 ./src/main.py
