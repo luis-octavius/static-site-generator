@@ -11,22 +11,15 @@ class HTMLNode():
         raise NotImplementedError
 
     def props_to_html(self):
-        if self.props:
-            str = ""
-            for k, v in self.props.items():
-                str += f' {k}="{v}"'
-
-            print("String: ", str)
-            return str 
-        return 
+        if self.props is None:
+            return ""
+        str = ""
+        for prop in self.props:
+            str += f' {prop}="{self.props[prop]}"'
+        return str 
 
     def __repr__(self):
-        return f"""
-tag: {self.tag}
-value: {self.value}
-children: {self.children}
-props: {self.props}
-"""
+        return f"tag: {self.tag}, value: {self.value}, children: {self.children}, props: {self.props}"
 
     def __eq__(self, other):
         if isinstance(other, HTMLNode):
@@ -37,15 +30,27 @@ class LeafNode(HTMLNode):
         super().__init__(tag, value, None, props)
 
     def to_html(self):
-        if not self.value:
-            raise ValueError 
+        if self.value is None:
+            raise ValueError("Invalid HTML: no value input") 
         
-        if not self.tag:
-            return str(self.value)
+        if self.tag is None:
+            return self.value
+        return f'<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>'
+    
+    def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
 
-        print("Props: ", self.props)
-        
-        if self.props == None:
-            return f'<{self.tag}>{self.value}</{self.tag}>'
-        else:
-            return f'<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>'
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props = None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError("Invalid HTML: no tag input")
+
+        concat_child = ""  
+        if self.children is None:
+            raise ValueError("Invalid HTML: no children input")
+        for child in self.children:
+            concat_child += child.to_html()
+        return f'<{self.tag}{self.props_to_html()}>{concat_child}</{self.tag}>'
