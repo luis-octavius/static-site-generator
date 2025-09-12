@@ -84,8 +84,16 @@ def text_to_text_nodes(text):
     split_delimiters_italic = split_nodes_delimiter(split_delimiters_bold, "_", TextType.ITALIC)
     split_delimiters_code = split_nodes_delimiter(split_delimiters_italic, "`", TextType.CODE)
     
-    print("Split after: ", split_delimiters_code)
-
     return split_delimiters_code
 
+def markdown_to_blocks(markdown):
+    new_list = markdown.split("\n\n")
+    print("new list: ", new_list)
 
+
+    stripped = []
+
+    for phrase in new_list:
+        stripped.append(phrase.strip())
+
+    return stripped 
