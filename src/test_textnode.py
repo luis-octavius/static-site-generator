@@ -54,11 +54,7 @@ class TestConvertNodeToHTML(unittest.TestCase):
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "img")
         self.assertEqual(html_node.props, {"src": "https://picsum.photos", "alt": "A image"})
-
-
-
     
-        
 
 if __name__ == "__main__":
     unittest.main()

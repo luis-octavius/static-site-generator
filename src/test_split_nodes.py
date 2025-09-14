@@ -1,12 +1,6 @@
 import unittest
-from textnode import TextNode, TextType 
-from split_nodes import (
-        split_nodes_delimiter, 
-        split_nodes_image, 
-        split_nodes_link, 
-        text_to_text_nodes,
-        markdown_to_blocks
-)
+from textnode import TextNode, TextType
+from split_nodes import split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_text_nodes,markdown_to_blocks
 
 class TestSplitNodes(unittest.TestCase):
     def test_code(self):
@@ -31,7 +25,7 @@ class TestSplitNodes(unittest.TestCase):
 
         self.assertEqual(splitted_node, test)
 
-   
+
     def test_italic(self):
         node = TextNode("This is a _italic_ text", TextType.TEXT)
         splitted_node = split_nodes_delimiter([node], "_", TextType.ITALIC)
@@ -68,7 +62,7 @@ class TestSplitNodes(unittest.TestCase):
                 TextNode("This is a text with an ", TextType.TEXT),
                 TextNode("link", TextType.LINK, "https://www.boot.dev"),
                 TextNode(" and another ", TextType.TEXT),
-                TextNode("second link", TextType.LINK, "https://www.google.com"), 
+                TextNode("second link", TextType.LINK, "https://www.google.com"),
             ],
             new_nodes,
         )
@@ -114,7 +108,7 @@ class TestSplitNodes(unittest.TestCase):
             ],
             new_nodes
         )
-    
+
     def test_text_to_text_nodes_two(self):
         node = "This is a text with an image ![image](https://www.imgur.com) and a link [google link](https://www.google.com) with a _italic_ shape and a `code block`, don't you dare to forget the **BOLD TEXT**"
 
@@ -135,7 +129,7 @@ class TestSplitNodes(unittest.TestCase):
             ],
             new_nodes
         )
-    
+
 
     def test_markdown_to_blocks_one(self):
         md = """
