@@ -22,7 +22,7 @@ def markdown_to_html_node(markdown):
             continue
         if block_type == BlockType.HEADING:
             content, hashes = clean_heading(block)
-            children = text_to_children(clean)
+            children = text_to_children(content)
             format_blocks.append(ParentNode(f"h{hashes}", content))
             continue
         if block_type == BlockType.QUOTE:
@@ -37,8 +37,8 @@ def markdown_to_html_node(markdown):
             continue
     return ParentNode("div", format_blocks)
 
-def text_to_children(str):
-    text_nodes = text_to_text_nodes(str)
+def text_to_children(text):
+    text_nodes = text_to_text_nodes(text)
 
     children = []
 
@@ -65,11 +65,11 @@ def clean_heading(text):
     lines = text.splitlines()
     if lines:
         lines[0] = re.sub(rf'^\s*#{{{hashes}}}\s+', '', lines[0])
-    content = " ".join(line.strip() for line in lines if line.strip != "")
+    content = " ".join(line.strip() for line in lines if line.strip() != "")
     return content, hashes 
 
 def clean_paragraph(text):
-    return " ".join(line.strip() for line in text.splitlines() if line.strip != "")
+    return " ".join(line.strip() for line in text.splitlines() if line.strip() != "")
 
 def clean_quote(text):
     lines = []
@@ -86,7 +86,7 @@ def clean_unordered(text):
         if not line:
             continue 
         line = re.sub(r'^\s*([-*])\s+', '', line)
-        li_nodes.append(ParentNode("li", text_to_children(str)))
+        li_nodes.append(ParentNode("li", text_to_children(line)))
     return ParentNode("ul", li_nodes)
 
 def clean_ordered(text):
@@ -96,7 +96,7 @@ def clean_ordered(text):
         if not line:
             continue
         line = re.sub(r'^\s*\d+\.\s+', '', line)
-        li_nodes.append(ParentNode("li", text_to_children(str)))
+        li_nodes.append(ParentNode("li", text_to_children(line)))
     return ParentNode("ol", li_nodes)
 
 def clean_code(text):
