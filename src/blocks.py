@@ -1,4 +1,4 @@
-from enum import Enum 
+from enum import Enum
 import re
 
 class BlockType(Enum):
@@ -9,22 +9,34 @@ class BlockType(Enum):
     UNORDERED_LIST = "unordered"
     ORDERED_LIST = "ordered"
 
-heading = r"(\#+)"
-code = r"^(`{3}[\s\S]*?`{3})$"
-quote = r"^\s*(>+)"
-unordered_list = r"^\s*(\*|\-|\+)"
-ordered_list = r"^\s*(\d+)\."
+# heading = r"(\#+)"
+# code = r"^(`{1-3}[\s\S]*?`{1-3})$"
+# quote = r"^\s*(>+)"
+# unordered_list = r"^\s*(\*|\-|\+)"
+# ordered_list = r"^\s*(\d+)\."
 
+def block_to_block_type(block):
+    lines = block.split("\n")
 
-def block_to_block_type(markdown):
-    if re.match(heading, markdown):
+    if block.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
         return BlockType.HEADING
-    if re.match(code, markdown, re.MULTILINE):
+    if len(lines) > 1 and lines[0].startswith("```") and lines[-1].startswith("```"):
         return BlockType.CODE
-    if re.match(quote, markdown):
+    if block.startswith(">"):
+        for line in lines:
+            if not line.startswith(">"):
+                return BlockType.PARAGRAPH
         return BlockType.QUOTE
-    if re.match(unordered_list, markdown):
+    if block.startswith("- "):
+        for line in lines:
+            if not line.startswith("- "):
+                return BlockType.PARAGRAPH
         return BlockType.UNORDERED_LIST
-    if re.match(ordered_list, markdown):
+    if block.startswith("1. "):
+        i = 1
+        for line in lines:
+            if not line.startswith(f"{i}. "):
+                return BlockType.PARAGRAPH
+            i += 1
         return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
