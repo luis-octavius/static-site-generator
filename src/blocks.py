@@ -40,3 +40,15 @@ def block_to_block_type(block):
             i += 1
         return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
+
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
+
+    stripped = []
+
+    for line in blocks:
+        if line == "":
+            continue
+        line = line.strip()
+        stripped.append(line)
+    return stripped

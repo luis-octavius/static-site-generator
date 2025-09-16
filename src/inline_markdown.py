@@ -2,7 +2,7 @@ from blocks import *
 from htmlnode import *
 from textnode import *
 import re 
-from split_nodes import markdown_to_blocks, text_to_text_nodes
+from split_nodes import text_to_text_nodes
 
 def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
@@ -46,18 +46,6 @@ def text_to_children(text):
         child = text_node_to_html_node(tn)
         children.append(child)
     return children
-
-# def remove_block_markers(text, block_type):
-#     if block_type == BlockType.HEADING:
-#         return clean_heading(text)
-#     if block_type == BlockType.QUOTE:
-#         return clean_quote(text)
-#     if block_type == BlockType.ORDERED_LIST:
-#         return clean_ordered(text)
-#     if block_type == BlockType.UNORDERED_LIST:
-#         return clean_unordered(text)
-#     if block_type == BlockType.CODE:
-#         return clean_code(text)
 
 def clean_heading(text):
     first = text.lstrip().splitlines()[0]
