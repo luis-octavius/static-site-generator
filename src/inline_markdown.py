@@ -23,7 +23,7 @@ def markdown_to_html_node(markdown):
         if block_type == BlockType.HEADING:
             content, hashes = clean_heading(block)
             children = text_to_children(content)
-            format_blocks.append(ParentNode(f"h{hashes}", content))
+            format_blocks.append(ParentNode(f"h{hashes}", children))
             continue
         if block_type == BlockType.QUOTE:
             clean = clean_quote(block)
