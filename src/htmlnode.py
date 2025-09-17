@@ -11,10 +11,10 @@ class HTMLNode():
     def props_to_html(self):
         if self.props is None:
             return ""
-        str = ""
+        string = ""
         for prop in self.props:
-            str += f' {prop}="{self.props[prop]}"'
-        return str
+            string += f' {prop}="{self.props[prop]}"'
+        return string
 
     def __repr__(self):
         return f"tag: {self.tag}, value: {self.value}, children: {self.children}, props: {self.props}"
@@ -50,5 +50,7 @@ class ParentNode(HTMLNode):
         if self.children is None:
             raise ValueError("Invalid HTML: no children input")
         for child in self.children:
+            if not hasattr(child, "to_html"):
+                raise TypeError(f"Child without to_html: {type(child)} -> {child!r}")
             concat_child += child.to_html()
         return f'<{self.tag}{self.props_to_html()}>{concat_child}</{self.tag}>'
