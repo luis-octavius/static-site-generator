@@ -34,7 +34,7 @@ def main():
         basepath = sys.argv[1]
 
     check_public()
-    copy_dir_contents("static", "public")
+    copy_dir_contents("static", "docs")
     generate_pages_recursive("content", "template.html", "docs", basepath)
 
 main()
