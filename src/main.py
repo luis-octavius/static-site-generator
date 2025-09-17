@@ -1,16 +1,17 @@
 import os 
 import shutil
+import sys
 from textnode import TextNode
 from generate_page import generate_pages_recursive
 
 def copy_dir_contents(src_dir, dest_dir): # copy the contents of a folder to another recursively
-    abs_src = os.path.abspath(src_dir) # 
-    dest_src = os.path.abspath(dest_dir)
-    list_dir = os.listdir(abs_src)
+    abs_src = os.path.abspath(src_dir) # constructs the abspath of source directory
+    dest_src = os.path.abspath(dest_dir) # same as above with the destination path 
+    list_dir = os.listdir(abs_src) 
 
     for file in list_dir:
-        src_path = os.path.join(abs_src, file)
-        dest_path = os.path.join(dest_src, file) 
+        src_path = os.path.join(abs_src, file) # constructs the abspath of file 
+        dest_path = os.path.join(dest_src, file) # constructs the abspath of file in destination 
 
         if os.path.isfile(src_path):
             os.makedirs(os.path.dirname(dest_path), exist_ok = True)
@@ -28,9 +29,13 @@ def check_public():
         os.mkdir(public_path)
 
 def main():
+    basepath = "/"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+
     check_public()
     copy_dir_contents("static", "public")
-    generate_pages_recursive("content", "template.html", "public")
+    generate_pages_recursive("content", "template.html", "docs", basepath)
 
 main()
 

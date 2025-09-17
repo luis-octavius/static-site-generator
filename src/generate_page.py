@@ -3,8 +3,8 @@ from extract import extract_title
 import os
 from pathlib import Path
 
-def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+def generate_page(from_path, template_path, dest_path, basepath):
+    print(f"{'\033[92m'}Generating page from {from_path} to {dest_path} using {template_path}{'\033[92m'}")
     
     from_contents = None 
     with open(from_path, 'r') as data:
@@ -23,6 +23,8 @@ def generate_page(from_path, template_path, dest_path):
 
     page = template_contents.replace("{{ Title }}", title)
     page = page.replace("{{ Content }}", html)
+    page = page.replace('href="/', f'href="{basepath}')
+    page = page.replace('src="/', f'href="{basepath}')
 
     dest_path = Path(dest_path)
     dest_path = dest_path.with_suffix(".html") # change extension of md file to html
@@ -33,7 +35,7 @@ def generate_page(from_path, template_path, dest_path):
         data.write(page)
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     abs_src = os.path.abspath(dir_path_content)
     dest_src = os.path.abspath(dest_dir_path)
 
@@ -47,8 +49,8 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
 
         if os.path.isfile(src_path) and file.endswith(".md"):
             os.makedirs(os.path.dirname(dest_path), exist_ok = True)
-            generate_page(src_path, template_path, dest_path)
+            generate_page(src_path, template_path, dest_path, basepath)
         else:
             os.makedirs(os.path.dirname(dest_path), exist_ok = True)
-            generate_pages_recursive(src_path, template_path, dest_path)
+            generate_pages_recursive(src_path, template_path, dest_path, basepath)
 
