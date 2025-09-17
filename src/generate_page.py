@@ -25,6 +25,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
     page = page.replace("{{ Content }}", html)
     page = page.replace('href="/', f'href="{basepath}')
     page = page.replace('src="/', f'href="{basepath}')
+    
+    print("THE PAGE: ", page)
 
     dest_path = Path(dest_path)
     dest_path = dest_path.with_suffix(".html") # change extension of md file to html

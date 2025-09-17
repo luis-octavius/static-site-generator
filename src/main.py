@@ -22,8 +22,8 @@ def copy_dir_contents(src_dir, dest_dir): # copy the contents of a folder to ano
             os.makedirs(dest_path, exist_ok = True)
             copy_dir_contents(src_path, dest_path)
 
-def check_public():
-    public_path = os.path.abspath(os.path.join("./", "public")) 
+def check_docs(folder):
+    public_path = os.path.abspath(os.path.join("./", folder)) 
     if os.path.exists(public_path):
         shutil.rmtree(public_path) 
         os.mkdir(public_path)
@@ -33,9 +33,9 @@ def main():
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
 
-    check_public()
-    copy_dir_contents("static", "docs")
-    generate_pages_recursive("content", "template.html", "docs", basepath)
+        check_docs("docs")
+        copy_dir_contents("static", "docs")
+        generate_pages_recursive("content", "template.html", "docs", basepath)
 
 main()
 
