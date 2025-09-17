@@ -1,7 +1,7 @@
 from inline_markdown import markdown_to_html_node 
 from extract import extract_title
 import os
-import re
+from pathlib import Path
 
 def generate_page(from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -15,26 +15,40 @@ def generate_page(from_path, template_path, dest_path):
     with open(template_path, 'r') as data:
         template_contents = data.read()
 
-    # print("Template: ", template_contents)
     html_node = markdown_to_html_node(from_contents)
-    # print("Type: ", type(html_node))
-    # print("Node html: ", html_node)
-
 
     html = html_node.to_html()
 
-    # print("HTML: ", html)
     title = extract_title(from_contents)
 
-    # re.sub("{{\s+Title\s+}}", title, template_contents)
-    # re.sub("{{\s+Content\s+}}", html, template_contents)
     page = template_contents.replace("{{ Title }}", title)
     page = page.replace("{{ Content }}", html)
 
-    print("Template: ", template_contents)
-    
+    dest_path = Path(dest_path)
+    dest_path = dest_path.with_suffix(".html") # change extension of md file to html
+
     if os.path.isdir(dest_path):
         os.makedirs(os.path.dirname(dest_path), exist_ok = True)
     with open(dest_path, "w") as data:
         data.write(page)
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    abs_src = os.path.abspath(dir_path_content)
+    dest_src = os.path.abspath(dest_dir_path)
+
+    list_content = os.listdir(dir_path_content)
+
+    print("list content: ", list_content)
+
+    for file in list_content:
+        src_path = os.path.join(abs_src, file)
+        dest_path = os.path.join(dest_src, file)
+
+        if os.path.isfile(src_path) and file.endswith(".md"):
+            os.makedirs(os.path.dirname(dest_path), exist_ok = True)
+            generate_page(src_path, template_path, dest_path)
+        else:
+            os.makedirs(os.path.dirname(dest_path), exist_ok = True)
+            generate_pages_recursive(src_path, template_path, dest_path)
 
